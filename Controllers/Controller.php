@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\src\Application;
 use App\src\Router;
 
 abstract class Controller
@@ -17,6 +18,6 @@ abstract class Controller
 
     public function render($view)
     {
-        return $this->router->renderView($view);
+        return Application::$app->router->renderView($view);
     }
 }

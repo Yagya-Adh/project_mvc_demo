@@ -1,9 +1,9 @@
 <?php
+ini_set('display_errors', '1');
 
 use App\Controllers\RestaurantController;
 use App\src\Application;
-use App\src\Request;
-use App\src\Router;
+
 
 require './vendor/autoload.php';
 

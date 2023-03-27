@@ -40,7 +40,7 @@ class Router
         $callback = $this->routes[$method][$path] ?? false;
 
         if ($callback === false) {
-            $this->response->setStatusCode(404);
+            Application::$app->response->setStatusCode(404);
             return $this->renderView("404");
         }
 
@@ -51,16 +51,13 @@ class Router
 
 
         if (is_array($callback)) {
-            $this->controller = new $callback[0];
-            $callback[0] = $this->controller;
+            Application::$app->controller = new $callback[0];
+            $callback[0] = Application::$app->controller;
         }
 
-        echo "<pre>";
-        print_r($callback);
-        echo "<pre>";
-        exit;
 
-        return call_user_func($callback, $this->request);
+
+        echo call_user_func($callback, $this->request);
     }
 
 
@@ -75,9 +72,9 @@ class Router
 
     protected function layoutContent()
     {
-        $layout = $this->layout;
+        $layout = Application::$app->controller->layout;
         ob_start();
-        include_once __DIR__ . "/../Views/restaurant/$layout.php";
+        include_once Application::$ROOT . "/../Views/restaurant/$layout.php";
         return ob_get_clean();
     }
 
@@ -89,7 +86,7 @@ class Router
             $$key = $value;
         }
         ob_start();
-        include_once __DIR__ . "/../Views/restaurant/$view.php";
+        include_once Application::$ROOT . "/../Views/restaurant/$view.php";
         return ob_get_clean();
     }
 
