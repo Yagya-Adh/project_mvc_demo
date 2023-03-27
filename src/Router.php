@@ -8,52 +8,59 @@ class Router
 {
 
     public Response $response;
+    public Request $request;
 
-    public $getRoutes = [];
-    public $postRoutes = [];
+
+    public Controller $controller;
+    protected array $routes = [];
 
     public Controller $layout; // controller property
 
     public function __construct()
     {
+        // $this->request = $request;
     }
 
     public function get($path, $callback)
     {
-        return  $this->getRoutes[$path] = $callback;
+        return  $this->routes['get'][$path] = $callback;
     }
 
     public function post($path, $callback)
     {
-        return $this->postRoutes[$path] = $callback;
+        return $this->routes['post'][$path] = $callback;
     }
 
 
     public function run()
     {
-        $method = strtolower($_SERVER['REQUEST_METHOD']);
-        $path = $_SERVER['PATH_INFO'] ?? '/';
 
+        $path = $this->request->getPath();
+        $method = $this->request->method();
+        $callback = $this->routes[$method][$path] ?? false;
 
-
-        if ($method === 'get') {
-            $callback = $this->getRoutes[$path] ?? null;
-        } else {
-            $callback = $this->postRoutes[$path] ?? null;
+        if ($callback === false) {
+            $this->response->setStatusCode(404);
+            return $this->renderView("404");
         }
 
+
+        if (is_string($callback)) {
+            return $this->renderView($callback);
+        }
+
+
+        if (is_array($callback)) {
+            $this->controller = new $callback[0];
+            $callback[0] = $this->controller;
+        }
 
         echo "<pre>";
         print_r($callback);
         echo "<pre>";
         exit;
 
-        if (!$path) {
-            $this->response->setStatusCode(404);
-            echo $this->renderView("404");
-        };
-
-        return call_user_func($path, $this);
+        return call_user_func($callback, $this->request);
     }
 
 
