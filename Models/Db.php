@@ -42,7 +42,7 @@ abstract class Db
 
     public function findAll()
     {
-        $query = "SELECT * FROM ".$this->tableName.";";
+        $query = "SELECT * FROM " . $this->tableName . ";";
         $stmt = $this->dbConnection->prepare($query);
         $stmt->execute();
         $stmt->setFetchMode(\PDO::FETCH_ASSOC);
