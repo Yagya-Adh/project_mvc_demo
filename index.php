@@ -1,14 +1,16 @@
 <?php
 
 use App\Controllers\RestaurantController;
-
+use App\src\Application;
+use App\src\Request;
 use App\src\Router;
 
 require './vendor/autoload.php';
 
-$router = new Router();
+$app = new Application(dirname(__DIR__));
 
-$router->get('/', [new RestaurantController, 'home']);
-$router->post('/', [new RestaurantController, 'home']);
 
-$router->run();
+$app->router->get('/', [new RestaurantController, 'home']);
+$app->router->post('/', [new RestaurantController, 'home']);
+
+$app->resolve();

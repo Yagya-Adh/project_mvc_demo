@@ -16,9 +16,9 @@ class Router
 
     public Controller $layout; // controller property
 
-    public function __construct()
+    public function __construct($request)
     {
-        // $this->request = $request;
+        $this->request = $request;
     }
 
     public function get($path, $callback)
